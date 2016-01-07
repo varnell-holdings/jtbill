@@ -25,7 +25,7 @@ with open('/Users/jtair/Downloads/JT Patients 2016.csv', 'rb') as csvfile:
         ep_time_stamp = row[0]
         ep_day = ep_time_stamp[8:10]
         ep_month = ep_time_stamp[5:7]
-        ep_date = ep_time_stamp[0:10]
+        ep_date = ep_day + '-' + ep_month + '-' + ep_time_stamp[0:4]
 
         if ep_day == input_day and ep_month == input_month\
                 and row[2] not in ['BB', 'GARRISON', 'OS', 'VA']:
