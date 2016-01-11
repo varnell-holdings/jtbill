@@ -1,5 +1,5 @@
 
-# contains two HTML snippets for constructing account
+# contains three HTML snippets for constructing account
 
 
 # table_html is the repetetive html that goes into the Fees Table
@@ -44,3 +44,6 @@ Procedure performed by Dr. %s<br>
 <th>Fee</th>
 </tr>
 <tr><td>17610</td><td>$</td><td style="text-align:right">%.2f</td></tr>'''
+
+# terminal_html is appended on bottom of html code
+terminal_html = '</table>\n</body>\n</html>'
