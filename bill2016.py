@@ -1,6 +1,7 @@
 #! /usr/bin/python
 
 '''Python 2.7.2 '''
+
 import csv
 
 # this a dictionary called fund_fees with the key
@@ -15,11 +16,9 @@ from module.templates import base_html
 from module.templates import table_html
 
 # medicare codes
-from module.fundfees import pe_code
-from module.fundfees import col_code
-from module.fundfees import age_code
-from module.fundfees import sick_code
+from module.fundfees import pe_code, col_code, age_code, sick_code
 
+# this will output to terminal the number of accounts printed as a check
 number_to_print = 0
 
 input_day = raw_input("input day in format --   ")
@@ -28,14 +27,10 @@ input_month = raw_input("input month in format --   ")
 with open('/Users/jtair/Downloads/JT Patients 2016.csv', 'rb') as csvfile:
     patlist = csv.reader(csvfile)
     for row in patlist:
-        ep_time_stamp = row[0]
-        ep_day = ep_time_stamp[8:10]
-        ep_month = ep_time_stamp[5:7]
-        ep_date = ep_day + '-' + ep_month + '-' + ep_time_stamp[0:4]
-
-        if ep_day == input_day and ep_month == input_month\
+        if input_day == row[0][8:10] and input_month == row[0][5:7]\
                 and row[2] not in ['BB', 'GARRISON', 'OS', 'VA']:
             # extract data from csv file into variables - these are strings
+            ep_date = row[0][8:10] + '-' + row[0][5:7] + '-' + row[0][0:4]
             patient = row[1]
             fund = row[2]
             endo = row[3]
@@ -57,26 +52,20 @@ with open('/Users/jtair/Downloads/JT Patients 2016.csv', 'rb') as csvfile:
             time_fee = time_length * unit
 
             # calculate total_fee
+            # first add on consult
             total_fee = consult_as_float
+
             if endo == 'Yes':
-                total_fee = total_fee + (5 * unit)
-                if age == 'Yes':
-                    total_fee = total_fee + unit
-                    if sick == 'Yes':
-                        total_fee = total_fee + unit
-                else:
-                    if sick == 'Yes':
-                        total_fee = total_fee + unit
+                total_fee += (unit * 5)
             else:
-                total_fee = total_fee + (4 * unit)
-                if age == 'Yes':
-                    total_fee = total_fee + unit
-                    if sick == 'Yes':
-                        total_fee = total_fee + unit
-                else:
-                    if sick == 'Yes':
-                        total_fee = total_fee + unit
-            total_fee = total_fee + (time_length * unit)  # add on time fees
+                total_fee += (unit * 4)
+            if age == 'Yes':
+                total_fee += unit
+            if sick == 'Yes':
+                total_fee += unit
+
+            # add on time fees
+            total_fee = total_fee + (time_length * unit)
 
             # output to string to make html
             html_output = base_html % (patient, fund, ep_date, doctor, consult)
@@ -118,5 +107,5 @@ with open('/Users/jtair/Downloads/JT Patients 2016.csv', 'rb') as csvfile:
             with open('/Users/jtair/Dropbox/DEC/PATIENT INVOICES/' + row[1] + '.html', 'w') as ep_file:
                 ep_file.write(html_output)
 
-# final print out of number of accounts done
+# final print out of number of accounts - done as a check
 print 'Number of accounts printed is {}'.format(number_to_print)
