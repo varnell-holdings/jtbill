@@ -13,12 +13,12 @@ tabl_html ='<tr><td>%s</td><td>$</td><td style="text-align:right"> %.2f</td></tr
 count = 0
 date = raw_input("input date in format --/--/----  ==>  ")
 
-with open('/Users/jtair/Downloads/JT Patients 2 (Responses) - Form responses 1.csv','rb') as csvfile:
+with open('/Users/jtair/Downloads/JT Patients 2015 (Responses) - Form responses 1.csv','rb') as csvfile:
     patlist = csv.reader(csvfile)
     for row in patlist:
         ep_time_stamp = row[0]
         ep_date = ep_time_stamp[:10]
-        
+
         if ep_date == date and row[2] not in ['BB','GARRISON','OS','VA']:
             # extract data from csv file into variables - these are strings
             patient = row[1]
@@ -39,7 +39,7 @@ with open('/Users/jtair/Downloads/JT Patients 2 (Responses) - Form responses 1.c
             #get time info and calculate time fee - the fourth digit in the time code gives the number of units
             time_length = int(time[3])
             time_fee = time_length * unit
-            
+
             # calculate total_fee
             total_fee = consult_as_float
             if endo == 'Yes':
@@ -61,9 +61,9 @@ with open('/Users/jtair/Downloads/JT Patients 2 (Responses) - Form responses 1.c
                     if sick == 'Yes':
                         total_fee = total_fee + unit
             total_fee = total_fee + (time_length * unit) # add on the time fees
-            
-                
-                    
+
+
+
             #output to string to make html
             html_output = test_string_mod.test_string_acc %(patient,fund,ep_date,doctor,consult)
             #now we progressively append lines to the Fees Table at the bottom of the account
@@ -94,17 +94,17 @@ with open('/Users/jtair/Downloads/JT Patients 2 (Responses) - Form responses 1.c
                 else:
                     if sick == 'Yes':
                         html_output = html_output + tabl_html % (sick_code,unit)
-                
-                
 
 
-            
-            
+
+
+
+
             html_output = html_output + tabl_html % (time, time_fee)
             html_output = html_output + tabl_html % ('Total Fee',total_fee)
             html_terminal = '</table>\n</body>\n</html>'
             html_output = html_output + html_terminal
-            
+
             #print html_output to file
             ep_file = open('/Users/jtair/Dropbox/DEC/PATIENT INVOICES/' + row[1] + '.html','w')
             ep_file.write(html_output)

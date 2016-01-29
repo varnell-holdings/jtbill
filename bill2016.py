@@ -19,13 +19,13 @@ number_to_print = 0
 input_day = raw_input("input day in format --   ")
 input_month = raw_input("input month in format --   ")
 
-with open('/Users/jtair/Downloads/JT Patients 2016.csv', 'rb') as csvfile:
+with open('/Users/jtair/Downloads/JT Patients 2016 (Responses) - Form responses 1.csv', 'rb') as csvfile:
     patlist = csv.reader(csvfile)
     for row in patlist:
-        if input_day == row[0][8:10] and input_month == row[0][5:7]\
+        if input_day == row[0][0:2] and input_month == row[0][3:5]\
                 and row[2] not in ['BB', 'GARRISON', 'OS', 'VA']:
             # extract data from csv file into variables - these are strings
-            ep_date = row[0][8:10] + '-' + row[0][5:7] + '-' + row[0][0:4]
+            ep_date = row[0][0:2] + '-' + row[0][3:5] + '-' + row[0][6:10]
             patient = row[1]
             fund = row[2]
             endo = row[3]
