@@ -88,7 +88,7 @@ while True:
             output_html = output_html + terminal_html
 
             # print output_html to file
-            with open('/Users/jtair/Dropbox/DEC/PATIENT INVOICES/'
+            with open('/Users/jtair/Documents/Invoices/'
                       + row[1] + '.html', 'w') as ep_file:
                 ep_file.write(output_html)
     csvfile.close()
