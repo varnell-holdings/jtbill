@@ -1,13 +1,12 @@
-#! /usr/bin/python
-
+#!/usr/bin/env python2.7
 '''Python 2.7.2 '''
 
-import csv, os
+import csv, os, webbrowser, pyautogui
 
 # fund_fees is a dictionary with the key
 # being the health fund ID and the data being a list with the consult fee
 # and the unit fee for each fund.
-# also imort medicare codes
+# also import medicare codes
 from module.fundfees import fund_fees, pe_code, col_code, age_code, sick_code
 
 # these html codes for the account
@@ -17,7 +16,8 @@ while True:
     try:
         csvfile = open('/Users/jtair/Downloads/JT Patients 2016 (Responses) - Form responses 1.csv', 'rb')
     except IOError:
-        print 'You need to download the csv file or delete extra copies of it.'
+        url = 'https://docs.google.com/spreadsheets/d/13p-ZYuUlmxo9fqnxru1Pg06xLES0gt_TwPJAw5nZrYU/edit?usp=sharing'
+        webbrowser.open(url)
         break
 
     patlist = csv.reader(csvfile)
@@ -95,13 +95,13 @@ while True:
     # final print out of number of accounts - done as a check
 
     if number_to_print == 0:
-        print'***There seems to be no patients that day.***'
+        print '***There seems to be no patients that day.***'
         print '     ***********'
     else:
         print 'Number of accounts printed is {}'.format(number_to_print)
+        print '      **********'
+        pyautogui.hotkey('fn', 'f2')
     more = raw_input('Print more accounts? y or n :')
     if more == 'n':
         os.remove('/Users/jtair/Downloads/JT Patients 2016 (Responses) - Form responses 1.csv')
         break
-    else:
-        pass
