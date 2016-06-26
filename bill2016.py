@@ -1,7 +1,4 @@
-#!/usr/bin/env python2.7
-'''Python 2.7.2 '''
-
-import csv, os, webbrowser, pyautogui
+import csv, os, webbrowser
 
 # fund_fees is a dictionary with the key
 # being the health fund ID and the data being a list with the consult fee
@@ -14,7 +11,7 @@ from module.templates import base_html, table_html, terminal_html
 
 while True:
     try:
-        csvfile = open('/Users/jtair/Downloads/JT Patients 2016 (Responses) - Form responses 1.csv', 'rb')
+        csvfile = open('/Users/jtair/Downloads/JT Patients 2016 (Responses) - Form responses 1.csv', 'r')
     except IOError:
         url = 'https://docs.google.com/spreadsheets/d/13p-ZYuUlmxo9fqnxru1Pg06xLES0gt_TwPJAw5nZrYU/edit?usp=sharing'
         webbrowser.open(url)
@@ -22,8 +19,8 @@ while True:
 
     patlist = csv.reader(csvfile)
     number_to_print = 0         # output the number of accounts printed as a check
-    input_day = raw_input("input day in format --   ")
-    input_month = raw_input("input month in format --   ")
+    input_day = input("input day in format --   ")
+    input_month = input("input month in format --   ")
     for row in patlist:
         if input_day == row[0][0:2] and input_month == row[0][3:5]\
                 and row[2] not in ['BB', 'GARRISON', 'OS', 'VA']:
@@ -95,13 +92,13 @@ while True:
     # final print out of number of accounts - done as a check
 
     if number_to_print == 0:
-        print '***There seems to be no patients that day.***'
-        print '     ***********'
+        print('***There seems to be no patients that day.***')
+        print('     ***********')
     else:
-        print 'Number of accounts printed is {}'.format(number_to_print)
-        print '      **********'
-        pyautogui.hotkey('fn', 'f2')
-    more = raw_input('Print more accounts? y or n :')
+        print('Number of accounts printed is {}'.format(number_to_print))
+        print('      **********')
+        # pyautogui.hotkey('fn', 'f2')
+    more = input('Print more accounts? y or n :')
     if more == 'n':
         os.remove('/Users/jtair/Downloads/JT Patients 2016 (Responses) - Form responses 1.csv')
         break
