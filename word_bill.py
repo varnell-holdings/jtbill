@@ -1,5 +1,5 @@
 import csv, os, webbrowser
-
+import docx
 # fund_fees is a dictionary with the key
 # being the health fund ID and the data being a list with the consult fee
 # and the unit fee for each fund.
@@ -7,7 +7,7 @@ import csv, os, webbrowser
 from module.fundfees import fund_fees, pe_code, col_code, age_code, sick_code
 
 # these html codes for the account
-from module.templates import base_html, table_html, terminal_html
+# from module.templates import base_html, table_html, terminal_html
 
 while True:
     try:
@@ -21,6 +21,7 @@ while True:
     number_to_print = 0         # output the number of accounts printed as a check
     input_day = input("input day in format --   ")
     input_month = input("input month in format --   ")
+    doc = docx.Document()
     for row in patlist:
         if input_day == row[0][0:2] and input_month == row[0][3:5]\
                 and row[2] not in ['BB', 'GARRISON', 'OS', 'VA']:
@@ -63,31 +64,48 @@ while True:
             # add on time fees
             total_fee = total_fee + (time_length * unit)
 
-            # put data (including consult fee) into base_html code
-            output_html = base_html % (patient, fund, ep_date, doctor, consult)
-            # now append lines to the Fees Table at the bottom of the account
+
+            doc.add_heading('Account for Anaesthetic',0)
+            doc.add_paragraph('')
+            doc.add_paragraph('Dr John Tillett',style='Heading2')
+            doc.add_paragraph('601/438 Victoria St',style='Heading3')
+            doc.add_paragraph('Darlinghurst NSW 2010',style='Heading3')
+            doc.add_paragraph('')
+            par = doc.add_paragraph('Provider Number: ')
+            par.add_run('0307195H').bold = True
+            doc.add_paragraph('Enquiries: ph 0408 116 320  fax 02 83826622')
+            doc.add_paragraph('Patient Details')
+            doc.add_paragraph('')
+            doc.add_paragraph('%s' % patient)
+            doc.add_paragraph('')
+            doc.add_paragraph('%s' % fund)
+            doc.add_paragraph('')
+            doc.add_paragraph('')
+            doc.add_paragraph('Date of Procedure:  %s' % ep_date)
+            doc.add_paragraph('Place of Procedure: Diagnostic Endoscopy Centre, Darlinghurst, NSW 2010')
+            doc.add_paragraph('Procedure performed by Dr %s' % doctor)
+            doc.add_paragraph('')
+            doc.add_paragraph('Item Number%sFee' % (' ' * 10))
+            doc.add_paragraph('17610%s%.2f' % (' ' * 22, consult_as_float))
             if endo == 'Yes':
-                output_html = output_html + table_html % (pe_code, 5 * unit)
+                doc.add_paragraph('%s%s%.2f'% (pe_code, ' ' * 20, unit * 5))
                 if colon == 'Yes':
-                    output_html = output_html + table_html % (col_code, 0.00)
+                    doc.add_paragraph('%s%s%.2f'% (col_code, ' ' * 23, 0.0))
             if endo == 'No' and colon == 'Yes':
-                output_html = output_html + table_html % (col_code, 4 * unit)
+                doc.add_paragraph('%s%s%.2f'% (col_code, ' ' * 20, unit * 4))
             if age == 'Yes':
-                output_html = output_html + table_html % (age_code, unit)
+                doc.add_paragraph('%s%s%.2f'% (age_code, ' ' * 21, unit))
             if sick == 'Yes':
-                output_html = output_html + table_html % (sick_code, unit)
+                doc.add_paragraph('%s%s%.2f'% (sick_code, ' ' * 21, unit))
+            doc.add_paragraph('%s%s%.2f'% (time, ' ' * 22, time_fee))
+            doc.add_paragraph('Total Fee%s%.2f'% (' ' * 16, total_fee))
+            doc.add_paragraph('')
+            p_gst = doc.add_paragraph('')
+            p_gst.add_run('No item on this invoice attracts GST').italic=True
+            doc.add_page_break()
 
-            # add on time fee
-            output_html = output_html + table_html % (time, time_fee)
-            # add on total fee
-            output_html = output_html + table_html % ('Total Fee', total_fee)
-            # add on terminal html code
-            output_html = output_html + terminal_html
 
-            # print output_html to file
-            with open('/Users/jtair/Documents/Invoices/'
-                      + row[1] + '.html', 'w') as ep_file:
-                ep_file.write(output_html)
+    doc.save('/Users/jtair/Documents/Invoices/accts.docx')
     csvfile.close()
     # final print out of number of accounts - done as a check
 
@@ -97,8 +115,7 @@ while True:
     else:
         print('Number of accounts printed is {}'.format(number_to_print))
         print('      **********')
-        # pyautogui.hotkey('fn', 'f2')
-    more = input('Print more accounts? y or n :')
-    if more == 'n':
-        os.remove('/Users/jtair/Downloads/JT Patients 2016 (Responses) - Form responses 1.csv')
-        break
+    # more = input('Print more accounts? y or n :')
+    # if more == 'n':
+    #     os.remove('/Users/jtair/Downloads/JT Patients 2016 (Responses) - Form responses 1.csv')
+    #     break
