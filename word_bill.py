@@ -65,43 +65,79 @@ while True:
             total_fee = total_fee + (time_length * unit)
 
 
-            doc.add_heading('Account for Anaesthetic',0)
+            doc.add_heading('Account for Anaesthetic',level = 0)
+            doc.add_heading('Dr John Tillett',level = 2)
+            doc.add_heading('7 Henry Lawson Drive, Villawood NSW 2163',level = 4)
+            doc.add_heading('Provider Number: 0307195H',level = 5)
+            doc.add_heading('Phone: 8382 6622  Email: john@endoscopy.stvincents.com.au', level = 5)
             doc.add_paragraph('')
-            doc.add_paragraph('Dr John Tillett',style='Heading2')
-            doc.add_paragraph('601/438 Victoria St',style='Heading3')
-            doc.add_paragraph('Darlinghurst NSW 2010',style='Heading3')
-            doc.add_paragraph('')
-            par = doc.add_paragraph('Provider Number: ')
-            par.add_run('0307195H').bold = True
-            doc.add_paragraph('Enquiries: ph 0408 116 320  fax 02 83826622')
-            doc.add_paragraph('Patient Details')
+            # p_prov = doc.add_paragraph('Provider Number: ')
+            # p_prov.add_run('0307195H').bold = True
+
+            # p_enq = doc.add_paragraph('Enquiries:')
+            # p_enq.add_run('  phone').italic = True
+            # p_enq.add_run('  0408 116 320')
+            # p_enq.add_run('  fax').italic = True
+            # p_enq.add_run('  02 8382 6622')
+            # p_enq.add_run('  email').italic = True
+            # p_enq.add_run('  tillett1957@gmail.com')
+            # doc.add_paragraph('Patient Details')
             doc.add_paragraph('')
             doc.add_paragraph('%s' % patient)
             doc.add_paragraph('')
             doc.add_paragraph('%s' % fund)
             doc.add_paragraph('')
-            doc.add_paragraph('')
             doc.add_paragraph('Date of Procedure:  %s' % ep_date)
-            doc.add_paragraph('Place of Procedure: Diagnostic Endoscopy Centre, Darlinghurst, NSW 2010')
-            doc.add_paragraph('Procedure performed by Dr %s' % doctor)
+            doc.add_paragraph('Procedure performed by Dr %s at the Diagnostic Endoscopy Centre, Darlinghurst, NSW 2010' % doctor)
             doc.add_paragraph('')
+
             doc.add_paragraph('Item Number%sFee' % (' ' * 10))
-            doc.add_paragraph('17610%s%.2f' % (' ' * 22, consult_as_float))
+
+            p_cons = doc.add_paragraph('17610')
+            cons_str = '%.2f' % consult_as_float
+            cons_str = cons_str.rjust(25)
+            p_cons.add_run(cons_str)
+
             if endo == 'Yes':
-                doc.add_paragraph('%s%s%.2f'% (pe_code, ' ' * 20, unit * 5))
+                p_endo = doc.add_paragraph(pe_code)
+                endo_str = '%.2f' % (unit * 5)
+                endo_str = endo_str.rjust(24)
+                p_endo.add_run(endo_str)
                 if colon == 'Yes':
-                    doc.add_paragraph('%s%s%.2f'% (col_code, ' ' * 23, 0.0))
+                    p_col = doc.add_paragraph(col_code)
+                    col_str = '%.2f' % 0.0
+                    col_str = col_str.rjust(26)
+                    p_col.add_run(col_str)
             if endo == 'No' and colon == 'Yes':
-                doc.add_paragraph('%s%s%.2f'% (col_code, ' ' * 20, unit * 4))
+                p_col = doc.add_paragraph(col_code)
+                col_str = '%.2f' % (unit * 4)
+                col_str = col_str.rjust(24)
+                p_col.add_run(col_str)
             if age == 'Yes':
-                doc.add_paragraph('%s%s%.2f'% (age_code, ' ' * 21, unit))
+                p_age = doc.add_paragraph(age_code)
+                age_str = '%.2f' % unit
+                age_str = age_str.rjust(25)
+                p_age.add_run(age_str)
             if sick == 'Yes':
-                doc.add_paragraph('%s%s%.2f'% (sick_code, ' ' * 21, unit))
-            doc.add_paragraph('%s%s%.2f'% (time, ' ' * 22, time_fee))
-            doc.add_paragraph('Total Fee%s%.2f'% (' ' * 16, total_fee))
+                p_sick = doc.add_paragraph(sick_code)
+                sick_str = '%.2f' % unit
+                sick_str = sick_str.rjust(25)
+                p_sick.add_run(sick_str)
+
+            p_time_fee = doc.add_paragraph(time)
+            time_fee_str = '%.2f' % time_fee
+            time_fee_str = time_fee_str.rjust(25)
+            p_time_fee.add_run(time_fee_str)
+
+            p_tot = doc.add_paragraph('Total Fee')
+            tot_str = '$%.2f' % total_fee
+            tot_str = tot_str.rjust(19)
+            p_tot.add_run(tot_str)
+
             doc.add_paragraph('')
             p_gst = doc.add_paragraph('')
             p_gst.add_run('No item on this invoice attracts GST').italic=True
+
             doc.add_page_break()
 
 
